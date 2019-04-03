@@ -69,8 +69,9 @@ class ProjetController extends Controller
      */
     public function show($id)
     {
+        $id=$id;
         $maisons = DB::table('maison')->where('idProjet', '=', $id)->get();
-        return view('projet.show',compact('maisons'));
+        return view('projet.show',compact('maisons','id'));
     }
 
     /**

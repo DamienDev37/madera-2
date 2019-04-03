@@ -41,8 +41,9 @@ class MaisonController extends Controller
      */
     public function create()
     {
+        $idProjet=$_GET['idProjet'];
         $gammes = DB::table('gammes')->get();
-        return view('maison.create', compact('gammes'));
+        return view('maison.create', compact('gammes','idProjet'));
     }
 
     /**
@@ -99,27 +100,23 @@ class MaisonController extends Controller
     public function update(Request $request, $id)
     {
         
+        $cmps= DB::table('composants')
+                ->where('idMaison', '=', intval($request['idMaison'][0]))
+                ->get();
+        foreach($cmps as $kk => $vv){
+            $this->composantRepository->destroy($vv->id);
+        }
         foreach($request['idProduit'] as $k => $v){
 
             if(!empty($request['idProduit'][$k]) && isset($request['idProduit'][$k]) && intval($request['quantite'][$k])>0){
 
                 $arr = [
-                    'idMaison' => $request['idMaison'][$k],
-                    'idProduit' => $request['idProduit'][$k],
-                    'quantite' => $request['quantite'][$k],
-                    'idFamille' => $request['idFamille'][$k],
+                    'idMaison' => intval($request['idMaison'][$k]),
+                    'idProduit' => intval($request['idProduit'][$k]),
+                    'quantite' => intval($request['quantite'][$k]),
+                    'idFamille' => intval($request['idFamille'][$k]),
                 ];
-                $product = DB::table('composants')
-                ->where('idMaison', '=', intval($request['idMaison'][$k]))
-                ->where('idProduit', '=', intval($request['idProduit'][$k]))
-                ->where('idFamille', '=', intval($request['idFamille'][$k]))
-                ->first();
-                if(!isset($product)){
-                    $this->composantRepository->store($arr);
-                }else{
-                    $this->composantRepository->destroy($product->id);
-                    $this->composantRepository->store($arr);
-                }
+                $this->composantRepository->store($arr);
                 
             }
             

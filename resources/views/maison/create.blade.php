@@ -5,10 +5,11 @@
 @endsection
 
 @section('content')
+
 <div class="col-md-12">
 	{!! Form::open(['route' => 'maison.store']) !!}
 	<div class="row">
-		<input type="hidden" class="form-control" id="idProjet" name="idProjet" value="1">
+		<input type="hidden" class="form-control" id="idProjet" name="idProjet" value="<?=$idProjet;?>">
 		<div class="form-group col-md-4">
 		    <label for="idGamme">Gamme de la maison</label>
 		    <select required class="form-control" id="idGamme" name="idGamme">

@@ -6,7 +6,7 @@
 
 @section('content')
 <div class="col-12">
-    <a class="btn btn-success" href="{{ route('maison.create') }}">Ajouter une maison</a>
+    <a class="btn btn-success" href="{{ route('maison.create', ['idProjet' => $id]) }}">Ajouter une maison</a>
 </div>
 <div class="col-12 table-responsive-sm">
   <table class="table table-striped">

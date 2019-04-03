@@ -79,6 +79,7 @@
               <label class="mt-3">Quantité</label>
               <input type="number" class="form-control" name="quantite[]" value="<?=$v->quantite;?>" />
               <input type="hidden" class="form-control" name="idFamille[]" value="1"/>
+              <input type="hidden" class="form-control" name="isVisible[]" value="1" />
           </div>
           <a class="deteleCardProduct btn btn-danger">Supprimer ce produit</a>
         </div>
@@ -111,6 +112,7 @@
               <label class="mt-3">Quantité</label>
               <input type="number" class="form-control" name="quantite[]" value="<?=$v->quantite;?>" />
               <input type="hidden" class="form-control" name="idFamille[]" value="2"/>
+              <input type="hidden" class="form-control" name="isVisible[]" value="1" />
           </div>
           <a class="deteleCardProduct btn btn-danger">Supprimer ce produit</a>
         </div>
@@ -143,6 +145,7 @@
               <label class="mt-3">Quantité</label>
               <input type="number" class="form-control" name="quantite[]" value="<?=$v->quantite;?>" />
               <input type="hidden" class="form-control" name="idFamille[]" value="3"/>
+              <input type="hidden" class="form-control" name="isVisible[]" value="1" />
           </div>
           <a class="deteleCardProduct btn btn-danger">Supprimer ce produit</a>
         </div>
@@ -171,6 +174,7 @@
               <label class="mt-3">Quantité</label>
               <input type="number" class="form-control" name="quantite[]" />
               <input type="hidden" class="form-control" name="idFamille[]" value="1"/>
+              <input type="hidden" class="form-control" name="isVisible[]" value="0" />
           </div>
           <a class="deteleCardProduct btn btn-danger w-100">Supprimer ce produit</a>
         </div>
@@ -187,6 +191,7 @@
               <label class="mt-3">Quantité</label>
               <input type="number" class="form-control" name="quantite[]" />
               <input type="hidden" class="form-control" name="idFamille[]" value="2"/>
+              <input type="hidden" class="form-control" name="isVisible[]" value="0" />
           </div>
           <a class="deteleCardProduct btn btn-danger w-100">Supprimer ce produit</a>
         </div>
@@ -203,6 +208,7 @@
               <label class="mt-3">Quantité</label>
               <input type="number" class="form-control" name="quantite[]" />
               <input type="hidden" class="form-control" name="idFamille[]" value="3"/>
+              <input type="hidden" class="form-control" name="isVisible[]" value="0" />
           </div>
           <a class="deteleCardProduct btn btn-danger w-100">Supprimer ce produit</a>
         </div>

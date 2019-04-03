@@ -7,7 +7,7 @@
 @section('content')
 <div class="col-12">
 
-  <a href="{{ route('projet.create') }}">Ajouter un projet</a>
+  <a href="{{ route('projet.create') }}" class="btn btn-success">Ajouter un projet</a>
 </div>
 <div class="col-12 table-responsive-sm">
 	<table class="table table-striped">
