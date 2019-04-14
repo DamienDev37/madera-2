@@ -24,4 +24,11 @@ Route::resource('pdf', 'PdfController');
 
 Route::resource('client', 'ClientController');
 
+Route::resource('produit', 'ProduitController');
+
+Route::resource('composant', 'ComposantController');
+
+
+
+
 Auth::routes();

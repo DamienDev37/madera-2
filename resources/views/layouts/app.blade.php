@@ -19,6 +19,7 @@
         <link rel="stylesheet"  type="text/css" href="<?=url('/css/app.css');?>">
     </head>
     <body id="page-top">
+        
         <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
             <a class="navbar-brand mr-1" href="/"><img src="<?=url('img/logo.png');?>" class="img-fluid w-10" style="width:120px;" /></a>
             <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
@@ -36,8 +37,9 @@
             @endif
             @else
             
-
-            
+                <li class="nav-item dropdown no-arrow">
+                    <a href="">Bonjour <?=Auth::user()->name;?></a>
+                </li>
                 <li class="nav-item dropdown no-arrow">
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-user-circle fa-fw"></i>

@@ -15,4 +15,15 @@
             <i class="fas fa-fw fa-user"></i>
             <span>Client</span></a>
         </li>
+        
+        <li class="nav-item">
+          <a class="nav-link" href="<?=url('produit');?>">
+            <i class="fas fa-fw fa-tags"></i>
+            <span>Produits</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="<?=url('devis');?>">
+            <i class="fas fa-fw fa-tags"></i>
+            <span>Devis</span></a>
+        </li>
 </ul>

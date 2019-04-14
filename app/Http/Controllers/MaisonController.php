@@ -72,10 +72,13 @@ class MaisonController extends Controller
         $couvertures = DB::table('couvertures')->get();
         $isolants = DB::table('isolants')->get();
         $parepluies = DB::table('parepluies')->get();
-        $produits = DB::table('produits')->get();
+        $sections = DB::table('produits')->where('idFamille', '=', 1)->get();
+        $montants = DB::table('produits')->where('idFamille', '=', 2)->get();
+        $remplissages = DB::table('produits')->where('idFamille', '=', 3)->get();
+
         $maison = $this->maisonRepository->getById($id);
         $gamme = DB::table('gammes')->where('id', '=', $maison->idGamme)->first();
-        return view('maison.show',  compact('maison','gammes','finitions','couvertures','isolants','parepluies','gamme','produits'));
+        return view('maison.show',  compact('maison','gammes','finitions','couvertures','isolants','parepluies','gamme','sections','montants','remplissages'));
     }
 
     /**
@@ -99,32 +102,41 @@ class MaisonController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
         $cmps= DB::table('composants')
-                ->where('idMaison', '=', intval($request['idMaison'][0]))
+                ->where('idMaison', '=', intval($id))
                 ->get();
         foreach($cmps as $kk => $vv){
             $this->composantRepository->destroy($vv->id);
         }
+        if($request['idProduit']!==null){
         foreach($request['idProduit'] as $k => $v){
 
             if(!empty($request['idProduit'][$k]) && isset($request['idProduit'][$k]) && intval($request['quantite'][$k])>0){
-
-                $arr = [
+                if($request['isVisible'][$k]!='0'){
+                    $arr = [
                     'idMaison' => intval($request['idMaison'][$k]),
                     'idProduit' => intval($request['idProduit'][$k]),
                     'quantite' => intval($request['quantite'][$k]),
                     'idFamille' => intval($request['idFamille'][$k]),
                 ];
                 $this->composantRepository->store($arr);
+                }
+                
                 
             }
             
         }
+        }
+        $data = new Maison();
+        $data->id=$id;
+        $data->idGamme = $request->request->get('idGamme');;
+        $data->timestamp = time();
         $maison = DB::table('maison')
-                ->where('id', '=', $request['idMaison'][0])
+                ->where('id', '=', intval($id))
                 ->first();
-        return redirect('/projet/'.$maison->idProjet);
+
+        var_dump($request->request);
+        //return redirect('/projet/'.$maison->idProjet);
     }
 
     /**

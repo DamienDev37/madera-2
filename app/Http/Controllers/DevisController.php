@@ -2,13 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use DB;
+use Auth;
+use App\Repositories\MaisonRepository;
 use App\Repositories\DevisRepository;
+use Illuminate\Support\Facades\Redirect;
 
-use App\Devis;
 use Illuminate\Http\Request;
 
 class DevisController extends Controller
 {
+    protected $devisRepository;
+    protected $maisonRepository;
+
+    protected $nbrPerPage = 32;
+
+    public function __construct(DevisRepository $devisRepository,MaisonRepository $maisonRepository)
+    {
+        $this->devisRepository = $devisRepository;
+        $this->maisonRepository = $maisonRepository;
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +31,13 @@ class DevisController extends Controller
      */
     public function index()
     {
-        return view('devis.index');
+        if(Auth::user()->isAdmin==1){
+            $devis = DB::table('devis')->get();
+        }else{
+            $devis = DB::table('devis')->where('idCommercial', '=', Auth::user()->id)->get();
+        }
+        
+        return view('devis.index', compact('devis'));
     }
 
     /**
@@ -26,7 +47,9 @@ class DevisController extends Controller
      */
     public function create()
     {
-        return view('devis.create');
+        $commerciaux = DB::table('commerciaux')->get();
+        $clients = DB::table('clients')->get();
+        return view('projet.create', compact('commerciaux', 'clients'));
     }
 
     /**
@@ -37,15 +60,9 @@ class DevisController extends Controller
      */
     public function store(Request $request)
     {
+        $projet = $this->projetRepository->store($request->all());
 
-        $devis = new Devis();
-        $devis->idClient = $request['idClient'];
-        $devis->gamme = $request['gamme'];
-        $devis->idProjet = 1;
-        $devis->products = "1,2,3,4,5,6";
-        $devis->total = 562;
-        $devis->save();
-        return redirect('devis');
+        return redirect('/projet')->withOk("L'utilisateur " . $projet->nom . " a été créé.");
     }
 
     /**
@@ -56,7 +73,9 @@ class DevisController extends Controller
      */
     public function show($id)
     {
-        return view('devis.view')->with('id',$id);
+        $id=$id;
+        $maisons = DB::table('maison')->where('idProjet', '=', $id)->get();
+        return view('projet.show',compact('maisons','id'));
     }
 
     /**
@@ -79,7 +98,9 @@ class DevisController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->projetRepository->update($id, $request->all());
+        
+        return redirect('projet');
     }
 
     /**
@@ -90,6 +111,8 @@ class DevisController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->projetRepository->destroy($id);
+
+        return redirect()->back();
     }
 }

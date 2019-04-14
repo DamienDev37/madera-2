@@ -66,7 +66,11 @@ $(document).ready(function(){
     });
 
     $(document).on('click','.deteleCardProduct',function(){
+      var child=$(this).children();
+      console.log(child);
+      child.val('0');
       var parent=$(this).parent();
       $(parent).css('display','none');
     });
+    
 });

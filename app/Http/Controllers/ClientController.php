@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Auth;
 use App\Repositories\ClientRepository;
 use Illuminate\Support\Facades\Redirect;
 
@@ -28,7 +29,11 @@ class ClientController extends Controller
      */
     public function index()
     {
-        $clients = $this->clientRepository->getPaginate($this->nbrPerPage);
+        if(Auth::user()->isAdmin==1){
+            $clients = DB::table('clients')->get();
+        }else{
+            $clients = DB::table('clients')->where('idCommercial', '=', Auth::user()->id)->get();
+        }
         return view('client.index', compact('clients'));
     }
 

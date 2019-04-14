@@ -20,15 +20,8 @@
 		    	<?php } ?>
 		    </select>
 		  </div>
-		  <div class="form-group">
-		    <label for="idCommercial">Nom du commercial</label>
-		    <select class="form-control" id="idCommercial" name="idCommercial">
-		    	<option value="">Choisissez le commercial</option>
-		    	<?php foreach ($commerciaux as $k => $v) { ?>
-		    		<option value="<?=$v->id?>"><?=$v->nom.' '.$v->prenom;?></option>
-		    	<?php } ?>
-		    </select>
-		  </div>
+		  <input type="hidden" class="form-control" id="idCommercial" name="idCommercial" value="<?=Auth::user()->id;?>">
+		  
 		<input type="hidden" class="form-control" id="timestamp" name="timestamp" value="<?=time();?>">
 		  {!! Form::submit('Générer mon projet', ['class' => 'btn btn-success pull-right']) !!}
 	{!! Form::close() !!}

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Auth;
 use App\Repositories\ProjetRepository;
 use App\Repositories\MaisonRepository;
 use Illuminate\Support\Facades\Redirect;
@@ -30,10 +31,13 @@ class ProjetController extends Controller
      */
     public function index()
     {
-        $projets = $this->projetRepository->getPaginate($this->nbrPerPage);
-        $links = $projets->render();
-
-        return view('projet.index', compact('projets', 'links'));
+        if(Auth::user()->isAdmin==1){
+            $projets = DB::table('projets')->get();
+        }else{
+            $projets = DB::table('projets')->where('idCommercial', '=', Auth::user()->id)->get();
+        }
+        
+        return view('projet.index', compact('projets'));
     }
 
     /**

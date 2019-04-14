@@ -19,6 +19,7 @@
 		    <label for="email">Email</label>
 			<input type="email" class="form-control" id="email" name="email" required>
 		</div>
+		<input type="hidden" name="idCommercial" id="idCommercial" value="<?=Auth::user()->id;?>" /> 
 		  {!! Form::submit('Générer le client', ['class' => 'btn btn-success pull-right']) !!}
 	{!! Form::close() !!}
 </div>

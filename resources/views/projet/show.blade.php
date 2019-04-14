@@ -13,10 +13,11 @@
   <thead>
     <tr>
       <th scope="col">#</th>
+      <th scope="col">Date de création / mise à jour</th>
       <th scope="col">Nb étages</th>
       <th scope="col">Longueur</th>
       <th scope="col">Largeur</th>
-      <th scope="col">Voir le devis</th>
+      <th scope="col">Générer un devis</th>
       <th scope="col">Modifier la maison</th>
       <th scope="col">Supprimer la maison</th>
     </tr>
@@ -25,17 +26,17 @@
     @foreach ($maisons as $maison)
     <tr>
       <td scope="row">{!! $maison->id !!}</td>
+      <td scope="row"><?=date('d/m/Y',$maison->timestamp);?></td>
       <td scope="row">{!! $maison->nbetages !!}</td>
       <td scope="row">{!! $maison->longueur !!}</td>
       <td scope="row">{!! $maison->largeur !!}</td>
-      <td><a href="{{ route('pdf.show', ['id' => $maison->id]) }}" class="fas fa-fw fa-eye" ></a></td>
-      <td><a href="{{ route('maison.show', ['id' => $maison->id]) }}" class="fas fa-fw fa-eye" ></a></td>
+      <td><a href="{{ route('devis.show', ['id' => $maison->id]) }}" class="fas fa-fw fa-file-pdf" ></a></td>
+      <td><a href="{{ route('maison.show', ['id' => $maison->id]) }}" class="fas fa-fw fa-pen" ></a></td>
       <td>
-        <a class="btn" onclick="event.preventDefault();document.getElementById('deleteContent').submit();"><i class="fas fa-trash"></i></a>
-        <form id="deleteContent" action="{{ route('maison.destroy',[$maison->id]) }}" method="DELETE" style="display: none;">
-        @csrf
-        </form>
-      </td>
+      {!! Form::open(['method' => 'DELETE', 'route' => ['maison.destroy', $maison->id]]) !!}
+        {!! Form::submit('Supprimer', ['class' => 'btn btn-danger', 'onclick' => 'return confirm(\'Vraiment supprimer cette maison ?\')']) !!}
+      {!! Form::close() !!}
+    </td>
       @endforeach
     </tr>
   </tbody>

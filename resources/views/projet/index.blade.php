@@ -15,27 +15,25 @@
     <tr>
       <th scope="col">Nom du projet</th>
       <th scope="col">Client</th>
-      <th scope="col">Commercial</th>
-      <th scope="col">Voir le projet</th>
-      <th scope="col">Supprimer le projet</th>
+      <th scope="col">Date du projet</th>
+      <th scope="col">Voir</th>
+      <th scope="col">Supprimer</th>
     </tr>
   </thead>
   <tbody>
     @foreach ($projets as $projet)
     <?php 
-    $commercial = DB::table('commerciaux')->where('id', '=', $projet->idCommercial)->first();
     $client = DB::table('clients')->where('id', '=', $projet->idClient)->first(); 
     ?>
     <tr>
       <td scope="row"><?=$projet->nom;?></td>
       <td scope="row"><?=$client->nom.' '. $client->prenom ;?></td>
-      <td scope="row"><?=$commercial->nom.' '. $commercial->prenom ;?></td>
-      <td><a href="{{ route('projet.show', ['id' => $projet->id]) }}" class="fas fa-fw fa-eye" ></a></td>
+      <td scope="row"><?=date('d/m/Y',$projet->timestamp);?></td>
+      <td><a href="{{ route('projet.show', ['id' => $projet->id]) }}" class="btn btn-primary" >Voir le projet</a></td>
       <td>
-        <a class="btn" onclick="event.preventDefault();document.getElementById('deleteProjet').submit();"><i class="fas fa-trash"></i></a>
-                        <form id="deleteProjet" action="{{ route('projet.destroy',[$projet->id]) }}" method="DELETE" style="display: none;">
-                            @csrf
-                        </form>
+        {!! Form::open(['method' => 'DELETE', 'route' => ['projet.destroy', $projet->id]]) !!}
+              {!! Form::submit('Supprimer ce projet', ['class' => 'btn btn-danger', 'onclick' => 'return confirm(\'Vraiment supprimer ce projet ?\')']) !!}
+            {!! Form::close() !!}
     </td>
     </tr>
   @endforeach
