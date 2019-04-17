@@ -6,7 +6,7 @@
 
 @section('content')
 <div class="col-12">
-    <a class="btn btn-success" href="{{ route('maison.create', ['idProjet' => $id]) }}">Ajouter une maison</a>
+    <a class="btn btn-success" href="{{ route('maison.create', ['idProjet' => $projet->id]) }}">Ajouter une maison</a>
 </div>
 <div class="col-12 table-responsive-sm">
   <table class="table table-striped">
@@ -30,7 +30,14 @@
       <td scope="row">{!! $maison->nbetages !!}</td>
       <td scope="row">{!! $maison->longueur !!}</td>
       <td scope="row">{!! $maison->largeur !!}</td>
-      <td><a href="{{ route('devis.show', ['id' => $maison->id]) }}" class="fas fa-fw fa-file-pdf" ></a></td>
+      <td>{!! Form::open(['method' => 'POST', 'route' => ['devis.store']]) !!}
+        <input type="hidden" name="idClient" value="<?=$projet->idClient;?>" />
+        <input type="hidden" name="idCommercial" value="<?=Auth::id();?>" />
+        <input type="hidden" name="idMaison" value="<?=$maison->id;?>" />
+        <input type="hidden" name="idEtat" value="1" />
+        {!! Form::submit('Générer', ['class' => 'btn btn-primary']) !!}
+      {!! Form::close() !!}
+        </td>
       <td><a href="{{ route('maison.show', ['id' => $maison->id]) }}" class="fas fa-fw fa-pen" ></a></td>
       <td>
       {!! Form::open(['method' => 'DELETE', 'route' => ['maison.destroy', $maison->id]]) !!}

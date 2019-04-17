@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Repositories\MaisonRepository;
 use App\Repositories\ComposantRepository;
 use DB;
+use App\Maison;
 use Illuminate\Support\Facades\Redirect;
 
 use Illuminate\Http\Request;
@@ -135,8 +136,7 @@ class MaisonController extends Controller
                 ->where('id', '=', intval($id))
                 ->first();
 
-        var_dump($request->request);
-        //return redirect('/projet/'.$maison->idProjet);
+        return redirect('/projet/'.$maison->idProjet);
     }
 
     /**

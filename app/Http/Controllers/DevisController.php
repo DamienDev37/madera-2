@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use DB;
 use Auth;
+use PDF;
+use App\Devis;
 use App\Repositories\MaisonRepository;
 use App\Repositories\DevisRepository;
 use Illuminate\Support\Facades\Redirect;
-
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\File;
 use Illuminate\Http\Request;
 
 class DevisController extends Controller
@@ -60,9 +63,74 @@ class DevisController extends Controller
      */
     public function store(Request $request)
     {
-        $projet = $this->projetRepository->store($request->all());
+        $maison = DB::table('maison')->where('id', '=', $request->request->get('idMaison'))->first(); 
 
-        return redirect('/projet')->withOk("L'utilisateur " . $projet->nom . " a été créé.");
+        $gamme = DB::table('gammes')
+            ->join('isolants', 'isolants.id', '=', 'gammes.idIsolant')
+            ->join('finitions', 'finitions.id', '=', 'gammes.idFinition')
+            ->join('parepluies', 'parepluies.id', '=', 'gammes.idParepluie')
+            ->join('couvertures', 'couvertures.id', '=', 'gammes.idCouverture')
+            ->where('gammes.id','=',$maison->idGamme)
+            ->select('gammes.nom as nomGamme', 
+                'isolants.nom as nomIsolant','isolants.prix as prixIsolant', 
+                'finitions.nom as nomFinition','finitions.prix as prixFinition',
+                'parepluies.nom as nomParepluie','parepluies.prix as prixParepluie',
+                'couvertures.nom as nomCouverture','couvertures.prix as prixCouverture')
+            ->first();
+        $projet = DB::table('projets')
+            ->join('maison', 'maison.idProjet', '=', 'projets.id')
+            ->join('clients', 'clients.id', '=', 'projets.idClient')
+            ->join('commerciaux', 'projets.idCommercial', '=', 'commerciaux.id')
+            ->where('maison.id','=',$maison->id)
+            ->select('maison.*', 'clients.nom as nomClient', 'clients.prenom as prenomClient','commerciaux.nom as nomCommercial', 'commerciaux.prenom as prenomCommercial')
+            ->first();
+        $composants = DB::table('composants')
+            ->join('maison', 'maison.id', '=', 'composants.idMaison')
+            ->join('produits', 'produits.id', '=', 'composants.idProduit')
+            ->join('familles', 'familles.id', '=', 'composants.idFamille')
+            ->where('composants.idMaison','=',$maison->id)
+            ->select('composants.quantite as quantite', 'familles.*', 'produits.typeProduit as typeProduit','produits.prix as prix')
+            ->get();
+        $devis = DB::table('devis')
+            ->where('devis.idCommercial','=',$request->request->get('idCommercial'))
+            ->get();
+        $htprice=0;
+            
+        $perimetre = ($maison->longueur + $maison->largeur) * 2;
+        $aire = $maison->longueur * $maison->largeur;
+        $surfaceMur = $perimetre * $maison->hauteur;
+        $prixTotalIsolant = $gamme->prixIsolant * $surfaceMur;
+        $prixTotalFinition = $gamme->prixFinition * $surfaceMur;
+        $prixTotalParepluie = $gamme->prixParepluie * $surfaceMur;
+        
+        $prixTotalCouverture = $gamme->prixCouverture * $surfaceMur;
+        
+        $htprice+=$prixTotalIsolant+$prixTotalFinition+$prixTotalParepluie;
+        foreach ($composants as $k => $v) {
+            $htprice+=($v->prix * $v->quantite);
+        }
+
+        $numDevis=count($devis)+1;
+        $data = new Devis;
+        $data->idClient = $request->request->get('idClient');
+        $data->idCommercial = $request->request->get('idCommercial');
+        $data->idMaison = $request->request->get('idMaison');
+        $data->idEtat = $request->request->get('idEtat');
+        $data->total = $htprice;
+        $data->numeroDevis = $numDevis;
+
+        $data->idRemise = 0;
+        $data->isValidated = 0;
+        $data->isOut = 0;
+
+        $output = PDF::loadView('pdf.pdf', compact('maison','projet','composants','gamme'))->output();
+        $name=time().'-devis-n-'.$numDevis.'.pdf';
+        Storage::put($name, $output);
+        $data->pdfurl = $name;
+        $data->save();
+        $devis = DB::table('devis')->where('idCommercial', '=', Auth::id())->first(); 
+        return view('devis.edit',compact('devis','maison','projet','composants','gamme'));
+        
     }
 
     /**
@@ -86,7 +154,38 @@ class DevisController extends Controller
      */
     public function edit($id)
     {
-        //
+        $devis = DB::table('devis')->where('id', '=', $id)->first(); 
+        $maison = DB::table('maison')->where('id', '=', $devis->idMaison)->first(); 
+
+        $gamme = DB::table('gammes')
+            ->join('isolants', 'isolants.id', '=', 'gammes.idIsolant')
+            ->join('finitions', 'finitions.id', '=', 'gammes.idFinition')
+            ->join('parepluies', 'parepluies.id', '=', 'gammes.idParepluie')
+            ->join('couvertures', 'couvertures.id', '=', 'gammes.idCouverture')
+            ->where('gammes.id','=',$maison->idGamme)
+            ->select('gammes.nom as nomGamme', 
+                'isolants.nom as nomIsolant','isolants.prix as prixIsolant', 
+                'finitions.nom as nomFinition','finitions.prix as prixFinition',
+                'parepluies.nom as nomParepluie','parepluies.prix as prixParepluie',
+                'couvertures.nom as nomCouverture','couvertures.prix as prixCouverture')
+            ->first();
+
+        $projet = DB::table('projets')
+            ->join('maison', 'maison.idProjet', '=', 'projets.id')
+            ->join('clients', 'clients.id', '=', 'projets.idClient')
+            ->join('users', 'projets.idCommercial', '=', 'users.id')
+            ->where('maison.id','=',$maison->id)
+            ->select('maison.*', 'clients.nom as nomClient', 'clients.prenom as prenomClient','users.lastname as nomCommercial', 'users.name as prenomCommercial')
+            ->first();
+
+        $composants = DB::table('composants')
+            ->join('maison', 'maison.id', '=', 'composants.idMaison')
+            ->join('produits', 'produits.id', '=', 'composants.idProduit')
+            ->join('familles', 'familles.id', '=', 'composants.idFamille')
+            ->where('composants.idMaison','=',$maison->id)
+            ->select('composants.quantite as quantite', 'familles.*', 'produits.typeProduit as typeProduit','produits.prix as prix')
+            ->get();
+        return view('devis.edit', compact('devis','maison','projet','composants','gamme'));
     }
 
     /**
@@ -98,9 +197,9 @@ class DevisController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->projetRepository->update($id, $request->all());
+        $this->devisRepository->update($id, $request->all());
         
-        return redirect('projet');
+        return redirect('devis');
     }
 
     /**

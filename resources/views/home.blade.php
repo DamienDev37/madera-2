@@ -3,7 +3,8 @@
 @section('content')
 <div class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-8 text-center">
+            <img src="<?=url('img/maison-home.jpg');?>" class="img-fluid mb-3" />
             <div class="card mx-auto">
 
                 <div class="card-body">

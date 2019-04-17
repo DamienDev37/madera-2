@@ -22,7 +22,7 @@
   <tbody>
     @foreach ($projets as $projet)
     <?php 
-    $commercial = DB::table('commerciaux')->where('id', '=', $projet->idCommercial)->first();; 
+    $commercial = DB::table('commerciaux')->where('id', '=', $projet->idCommercial)->first();
     $client = DB::table('clients')->where('id', '=', $projet->idClient)->first(); 
     ?>
     <tr>

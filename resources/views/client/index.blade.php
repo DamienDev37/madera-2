@@ -28,7 +28,7 @@
       <td>{!! link_to_route('client.edit', '', [$client->id], ['class' => 'fas fa-fw fa-pen']) !!}</td>
       <td>
       {!! Form::open(['method' => 'DELETE', 'route' => ['client.destroy', $client->id]]) !!}
-        {!! Form::submit('Supprimer', ['class' => '', 'onclick' => 'return confirm(\'Vraiment supprimer ce client ?\')']) !!}
+        {!! Form::submit('Supprimer', ['class' => 'btn btn-danger', 'onclick' => 'return confirm(\'Vraiment supprimer ce client ?\')']) !!}
       {!! Form::close() !!}
     </td>
     </tr>

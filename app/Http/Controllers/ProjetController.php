@@ -73,9 +73,9 @@ class ProjetController extends Controller
      */
     public function show($id)
     {
-        $id=$id;
+        $projet = DB::table('projets')->where('id', '=', $id)->first();
         $maisons = DB::table('maison')->where('idProjet', '=', $id)->get();
-        return view('projet.show',compact('maisons','id'));
+        return view('projet.show',compact('maisons','projet'));
     }
 
     /**
@@ -86,7 +86,9 @@ class ProjetController extends Controller
      */
     public function edit($id)
     {
-        //
+        $projet = DB::table('projets')->where('id', '=', $id)->first();
+        $commercials = DB::table('users')->where('isAdmin', '=', 0)->get();
+        return view('projet.edit',compact('projet','commercials'));
     }
 
     /**
