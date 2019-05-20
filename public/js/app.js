@@ -40,8 +40,10 @@
 })(jQuery); // End of use strict
 
 $(document).ready(function(){
-    $('[name=gamme]').on('change',function(){
-         
+    $('[name=idGamme]').on('change',function(){
+         $('.wrapGamme').addClass('d-none');
+         var gamme=$(this).val();
+         $('.gamme'+gamme).removeClass('d-none');
     });
     $('[name=addSectionProduct]').on('click',function(e){
       e.preventDefault();

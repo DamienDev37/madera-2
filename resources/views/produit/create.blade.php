@@ -20,7 +20,7 @@
 		    </select>
 		</div>
 		<div class="form-group">
-		    <label for="typeproduit">Type de produit</label>
+		    <label for="typeproduit">Nom du produit</label>
 			<input type="text" class="form-control" id="typeproduit" name="typeproduit" required>
 		</div>
 		<div class="form-group">

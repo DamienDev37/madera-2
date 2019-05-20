@@ -28,7 +28,12 @@ Route::resource('produit', 'ProduitController');
 
 Route::resource('composant', 'ComposantController');
 
+Route::resource('gamme', 'GammeController');
 
+Route::resource('couverture', 'CouvertureController');
+Route::resource('isolant', 'IsolantController');
+Route::resource('finition', 'FinitionController');
+Route::resource('parepluie', 'ParepluieController');
 
 
 Auth::routes();

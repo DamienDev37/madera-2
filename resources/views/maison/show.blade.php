@@ -5,11 +5,11 @@
 @endsection
 
 @section('content')
-<input type="hidden" name="idChoiceGamme" value="0" />
+<input type="hidden" name="idChoiceGamme" value="<?=$maison->idGamme;?>" />
 <div class="col-md-12">
   {!! Form::model($maison, ['route' => ['maison.update', $maison->id], 'method' => 'put', 'class' => '']) !!}
   <div class="row">
-    <div class="form-group col-md-6">
+    <div class="form-group col-md-12">
         <label for="idGamme">Gamme de la maison</label>
         <select required class="form-control" id="idGamme" name="idGamme">
           <option value="" selected>Choisissez la gamme</option>
@@ -18,42 +18,19 @@
           <?php } ?>
         </select>
     </div>
-    <div class="form-group col-md-6">
-        <label for="idFinition">Finition</label>
-        <select class="form-control" id="idFinition" name="idFinition" disabled="disabled">
-          <option value="" selected>Choisissez la finition</option>
-          <?php foreach ($finitions as $k => $v) { ?>
-            <option <?php if($v->id==$gamme->idFinition)echo'selected'; ?> value="<?=$v->id?>"><?=$v->nom;?></option>
-          <?php } ?>
-        </select>
-    </div>
-    <div class="form-group col-md-6">
-        <label for="idCouverture">Couverture</label>
-        <select class="form-control" id="idCouverture" name="idCouverture" disabled="disabled">
-          <option value="" selected>Choisissez la couverture</option>
-          <?php foreach ($couvertures as $k => $v) { ?>
-            <option <?php if($v->id==$gamme->idCouverture)echo'selected'; ?> value="<?=$v->id?>"><?=$v->nom;?></option>
-          <?php } ?>
-        </select>
-    </div>
-    <div class="form-group col-md-6">
-        <label for="idIsolant">Isolant</label>
-        <select class="form-control" id="idIsolant" name="idIsolant" disabled="disabled">
-          <option value="" selected>Choisissez l'isolant</option>
-          <?php foreach ($isolants as $k => $v) { ?>
-            <option <?php if($v->id==$gamme->idIsolant)echo'selected'; ?> value="<?=$v->id?>"><?=$v->nom;?></option>
-          <?php } ?>
-        </select>
-    </div>
-    <div class="form-group col-md-6">
-        <label for="idParePluie">Pare-pluie</label>
-        <select class="form-control" id="idParePluie" name="idParePluie" disabled="disabled">
-          <option value="" selected>Choisissez le pare-pluie</option>
-          <?php foreach ($parepluies as $k => $v) { ?>
-            <option <?php if($v->id==$gamme->idParePluie)echo'selected'; ?> value="<?=$v->id?>"><?=$v->Nom;?></option>
-          <?php } ?>
-        </select>
-    </div>
+    <?php foreach ($gammes as $k => $v) {
+        $finition = DB::table('finitions')->where('id', '=', $v->idFinition)->first();
+        $couverture = DB::table('couvertures')->where('id', '=', $v->idCouverture)->first();
+        $isolant = DB::table('isolants')->where('id', '=', $v->idIsolant)->first();
+        $parepluie = DB::table('parepluies')->where('id', '=', $v->idParePluie)->first();
+     ?>
+      <div class="form-group col-md-12 wrapGamme gamme<?=$v->id;?> <?php if($v->id!=$maison->idGamme)echo'd-none'; ?>">
+          <p>Finition : <?=$finition->nom;?></p>
+          <p>Couverture : <?=$couverture->nom;?></p>
+          <p>Isolant : <?=$isolant->nom;?></p>
+          <p>Parepluie : <?=$parepluie->Nom;?></p>
+      </div>
+    <?php }?>
   </div>
   <div class="row">
     <div class="col-md-12">

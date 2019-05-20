@@ -115,14 +115,30 @@
                 <td>
                     Prix HT
                 </td>
-                <td><?=$htprice;?></td>
+                <td><?=$htprice;?> €</td>
             </tr>
             <tr>
                 <td>
                     Prix TTC
                 </td>
-                <td><?=$htprice * 1.2;?></td>
+                <td><?=$htprice * 1.2;?> €</td>
             </tr>
+            <?php if(isset($remise)){?>
+            <tr>
+                <td>
+                    Pourcentage remise
+                </td>
+                <td><?=$remise->name.' %';?></td>
+            </tr>
+            <tr>
+                <td>
+                    Prix TTC remisé
+                </td>
+                <?php $str='0.'.$remise->name;
+                $remiseAmount=1-floatval($str);?>
+                <td><?=($htprice * 1.2) * $remiseAmount;?> €</td>
+            </tr>
+        <?php }?>
         </table>
         <table class="table" align="center">
             <tr>
@@ -140,15 +156,17 @@
       <form method="PUT" action="{{ route('devis.update',$devis->id) }}"> 
         <div class="row mb-4">
           <div class="col-md-12">
-            <select class="form-control" id="idEtat" name="idEtat" >
+            <label>Etat du devis</label>
+            <select class="form-control mb-4" id="idEtat" name="idEtat" <?php if($devis->idEtat==6){echo'disabled';}?> >
               <?php $etats = DB::table('devisetats')->get();
               foreach ($etats as $k => $v) { ?>
                 <option <?php if($v->id==$devis->idEtat)echo'selected'; ?> value="<?=$v->id?>"><?=$v->name;?></option>
               <?php } ?>
             </select>
         <?php if($devis->idEtat!=1 && $devis->idEtat!=4){ ?>
-          <select class="form-control" id="idEtat" name="idRemise" >
-            <option value="">Attribuer une remise</option>
+            <label>Remise</label>
+          <select class="form-control" id="idEtat" name="idRemise" <?php if($devis->idEtat==6){echo'disabled';}?>>
+            <option value="0">0 %</option>
               <?php $remises = DB::table('remises')->get();
               foreach ($remises as $k => $v) { ?>
                 <option <?php if($v->id==$devis->idRemise)echo'selected'; ?> value="<?=$v->id?>"><?=$v->name;?> %</option>

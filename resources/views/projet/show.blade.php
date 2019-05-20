@@ -35,7 +35,7 @@
         <input type="hidden" name="idCommercial" value="<?=Auth::id();?>" />
         <input type="hidden" name="idMaison" value="<?=$maison->id;?>" />
         <input type="hidden" name="idEtat" value="1" />
-        {!! Form::submit('Générer', ['class' => 'btn btn-primary']) !!}
+        {!! Form::submit('Voir le devis', ['class' => 'btn btn-primary']) !!}
       {!! Form::close() !!}
         </td>
       <td><a href="{{ route('maison.show', ['id' => $maison->id]) }}" class="fas fa-fw fa-pen" ></a></td>

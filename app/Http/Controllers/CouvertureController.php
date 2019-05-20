@@ -4,21 +4,21 @@ namespace App\Http\Controllers;
 
 use DB;
 use Auth;
-use App\Repositories\GammeRepository;
+use App\Repositories\CouvertureRepository;
 use Illuminate\Support\Facades\Redirect;
 
 use Illuminate\Http\Request;
 
-class GammeController extends Controller
+class couvertureController extends Controller
 {
-    protected $gammeRepository;
+    protected $couvertureRepository;
 
     protected $nbrPerPage = 32;
 
-    public function __construct(GammeRepository $gammeRepository)
+    public function __construct(CouvertureRepository $couvertureRepository)
     {
         $this->middleware('auth');
-        $this->gammeRepository = $gammeRepository;
+        $this->CouvertureRepository = $couvertureRepository;
     }
 
     /**
@@ -28,8 +28,8 @@ class GammeController extends Controller
      */
     public function index()
     {
-        $gammes = $this->gammeRepository->getPaginate($this->nbrPerPage);
-        return view('gamme.index', compact('gammes'));
+        $couvertures = DB::table('couvertures')->get();
+        return view('couverture.index', compact('couvertures'));
     }
 
     /**
@@ -40,7 +40,7 @@ class GammeController extends Controller
     public function create()
     {
         $fournisseurs = DB::table('fournisseurs')->get();
-        return view('gamme.create', compact('fournisseurs'));
+        return view('couverture.create', compact('fournisseurs'));
     }
 
     /**
@@ -51,9 +51,9 @@ class GammeController extends Controller
      */
     public function store(Request $request)
     {
-        $gamme = $this->gammeRepository->store($request->all());
+        $couverture = $this->CouvertureRepository->store($request->all());
 
-        return redirect('/gamme')->withOk("La gamme a été créer");
+        return redirect('/couverture')->withOk("La couverture a été créer");
     }
 
     /**
@@ -64,8 +64,8 @@ class GammeController extends Controller
      */
     public function show($id)
     {
-        $gamme = $this->gammeRepository->getById($id);
-        return view('gamme.show',  compact('gamme'));
+        $couverture = $this->CouvertureRepository->getById($id);
+        return view('couverture.show',  compact('couverture'));
     }
 
     /**
@@ -76,9 +76,9 @@ class GammeController extends Controller
      */
     public function edit($id)
     {
-        $gamme = $this->gammeRepository->getById($id);
+        $couverture = $this->CouvertureRepository->getById($id);
         $fournisseurs = DB::table('fournisseurs')->get();
-        return view('gamme.edit',  compact('gamme','fournisseurs'));
+        return view('couverture.edit',  compact('couverture','fournisseurs'));
     }
 
     /**
@@ -90,9 +90,9 @@ class GammeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->gammeRepository->update($id, $request->all());
+        $this->CouvertureRepository->update($id, $request->all());
         
-        return redirect('gamme');
+        return redirect('couverture');
     }
 
     /**
@@ -103,7 +103,7 @@ class GammeController extends Controller
      */
     public function destroy($id)
     {
-        $this->gammeRepository->destroy($id);
+        $this->CouvertureRepository->destroy($id);
 
         return redirect()->back();
     }

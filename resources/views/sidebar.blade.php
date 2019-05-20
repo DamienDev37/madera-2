@@ -26,4 +26,9 @@
             <i class="fas fa-fw fa-tags"></i>
             <span>Devis</span></a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="<?=url('gamme');?>">
+            <i class="fas fa-fw fa-tags"></i>
+            <span>Gestion de stocks</span></a>
+        </li>
 </ul>

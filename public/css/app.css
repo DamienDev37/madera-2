@@ -378,3 +378,7 @@ body.sidebar-toggled footer.sticky-footer {
   max-width: 390px;
   min-width: 320px;
 }
+
+.wrapGamme {
+  transition: all 0.3s ease;
+}

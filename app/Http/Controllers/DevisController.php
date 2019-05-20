@@ -80,9 +80,9 @@ class DevisController extends Controller
         $projet = DB::table('projets')
             ->join('maison', 'maison.idProjet', '=', 'projets.id')
             ->join('clients', 'clients.id', '=', 'projets.idClient')
-            ->join('commerciaux', 'projets.idCommercial', '=', 'commerciaux.id')
+            ->join('users', 'projets.idCommercial', '=', 'users.id')
             ->where('maison.id','=',$maison->id)
-            ->select('maison.*', 'clients.nom as nomClient', 'clients.prenom as prenomClient','commerciaux.nom as nomCommercial', 'commerciaux.prenom as prenomCommercial')
+            ->select('maison.*', 'clients.nom as nomClient', 'clients.prenom as prenomClient','users.lastname as nomCommercial', 'users.name as prenomCommercial')
             ->first();
         $composants = DB::table('composants')
             ->join('maison', 'maison.id', '=', 'composants.idMaison')
@@ -115,19 +115,27 @@ class DevisController extends Controller
         $data->idClient = $request->request->get('idClient');
         $data->idCommercial = $request->request->get('idCommercial');
         $data->idMaison = $request->request->get('idMaison');
-        $data->idEtat = $request->request->get('idEtat');
+        
         $data->total = $htprice;
         $data->numeroDevis = $numDevis;
 
         $data->idRemise = 0;
         $data->isValidated = 0;
         $data->isOut = 0;
-
-        $output = PDF::loadView('pdf.pdf', compact('maison','projet','composants','gamme'))->output();
-        $name=time().'-devis-n-'.$numDevis.'.pdf';
-        Storage::put($name, $output);
-        $data->pdfurl = $name;
-        $data->save();
+        $data->pdfurl = '';
+        if(!$devis = DB::table('devis')
+            ->where('devis.idMaison','=',$request->request->get('idMaison'))
+            ->first()){
+            $data->idEtat = $request->request->get('idEtat');
+            $data->save();
+        }else{
+            $devis = DB::table('devis')
+            ->where('devis.idMaison','=',$request->request->get('idMaison'))
+            ->first();
+            $data->id=$devis->id;
+            $data->idEtat = $devis->idEtat;
+            $data->update();
+        }
         $devis = DB::table('devis')->where('idCommercial', '=', Auth::id())->first(); 
         return view('devis.edit',compact('devis','maison','projet','composants','gamme'));
         
@@ -185,7 +193,15 @@ class DevisController extends Controller
             ->where('composants.idMaison','=',$maison->id)
             ->select('composants.quantite as quantite', 'familles.*', 'produits.typeProduit as typeProduit','produits.prix as prix')
             ->get();
-        return view('devis.edit', compact('devis','maison','projet','composants','gamme'));
+        if($devis->idRemise!=0){
+                $remise = DB::table('remises')
+                ->where('remises.id', '=', $devis->idRemise)
+                ->first();
+                return view('devis.edit', compact('devis','maison','projet','composants','gamme','remise'));
+            }else{
+                return view('devis.edit', compact('devis','maison','projet','composants','gamme'));
+            }
+        
     }
 
     /**
@@ -210,7 +226,7 @@ class DevisController extends Controller
      */
     public function destroy($id)
     {
-        $this->projetRepository->destroy($id);
+        $this->devisRepository->destroy($id);
 
         return redirect()->back();
     }

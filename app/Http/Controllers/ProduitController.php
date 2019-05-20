@@ -55,12 +55,6 @@ class ProduitController extends Controller
         $data = new Produit();
         $produitImg='';
         $produitCctp='';
-        if($request->request->get('id')!==null){
-            $data->id = $request->request->get('id');
-            $produit = DB::table('produits')->where('id', '=', $request->request->get('id'))->first();
-            $produitImg=$produit->img;
-            $produitCctp=$produit->cctp;
-        }
         if(!empty($request->files->get('img'))){
             $img=$request->files->get('img');
             $imgName = $img->getClientOriginalName();
@@ -75,14 +69,17 @@ class ProduitController extends Controller
             Storage::disk('public')->putFileAs('produit', new File($cctpPath),$cctpName);
             $produitCctp= $cctpName;
         }
-        $data->img = $produitImg;
-        $data->cctp = $produitCctp;
-        $data->idFamille=$request->request->get('idFamille');
-        $data->typeproduit = $request->request->get('typeproduit');
-        $data->prix = $request->request->get('prix');
-        $data->timestamp = time();
-        $data->update();
-        
+        $data=$request->all();
+        $data['img'] = $produitImg;
+        $data['cctp'] = $produitCctp;
+        $data['idFamille']=$request->request->get('idFamille');
+        $data['typeproduit'] = $request->request->get('typeproduit');
+        $data['prix'] = $request->request->get('prix');
+        $data['timestamp']= time();
+        $produit = $this->produitRepository->store($data);
+
+        return redirect('/produit');
+
         //return redirect('/produit')->withOk("Le produit a bien été créer.");
     }
 
@@ -151,8 +148,8 @@ class ProduitController extends Controller
         $data->prix = $request->request->get('prix');
         $data->timestamp = time();
         
-        //$data->update();
-        //return redirect('/produit')->withOk("Le produit a bien été mis à jour.");
+        $data->update();
+        return redirect('/produit')->withOk("Le produit a bien été mis à jour.");
     }
 
     /**

@@ -17,7 +17,7 @@
 			$famille = DB::table('familles')->whereId($v->idFamille)->first();?>
 			
 	    <div class="card mb-4">
-	        <img class="card-img-top" src="<?=asset('storage/produit/'.$v->img);?>" alt="Image du produit <?=$v->id;?>">
+	        <img class="card-img-top" src="{{ asset('storage/produit/'.$v->img) }}" alt="Image du produit <?=$v->id;?>">
 	        <div class="card-body">
 	        	<h5 class="card-title">Famille : <?=$famille->nom;?></h5>
 	            <h5 class="card-title"><?=$v->typeproduit;?></h5>

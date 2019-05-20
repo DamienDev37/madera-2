@@ -43,7 +43,7 @@
             $htprice+=$prixTotalIsolant+$prixTotalFinition+$prixTotalParepluie;
             ?>
         <h3>La maison</h3>
-        <table style="border: 1px solid grey;width: 100%;margin: 0 auto 10pt auto;">
+        <table style="border: 1px solid grey;width: 100%;margin: 0 auto 20pt auto;">
             <tr style="border-bottom: 1px solid grey;background: #e2e2e2;">
                 <th style="text-align: center;">Nombre d'étage</th>
                 <th style="text-align: center;">Longueur</th>
@@ -61,30 +61,22 @@
         </table>
         <h3>Composition murs extérieurs</h3>
         <h4>Nom de la gamme : <?=$gamme->nomGamme;?></h4>
-        <table style="border: 1px solid grey;width: 100%;margin: 0 auto 10pt auto;">
+        <table style="border: 1px solid grey;width: 100%;margin: 0 auto 20pt auto;">
             <tr style="border-bottom: 1px solid grey;background: #e2e2e2;">
                 <th>Type</th>
                 <th>Libellé</th>
-                <th style="text-align: center;">P.U.</th>
-                <th style="text-align: center;">Montant</th>
             </tr>
             <tr>
                 <td>Isolant</td>
                 <td><?=$gamme->nomIsolant;?></td>
-                <td style="text-align: center;"><?=$gamme->prixIsolant;?> €</td>
-                <td style="text-align: center;"><?=$prixTotalIsolant;?> €</td>
             </tr>
             <tr>
                 <td>Finition</td>
                 <td><?=$gamme->nomFinition;?></td>
-                <td style="text-align: center;"><?=$gamme->prixFinition;?> €</td>
-                <td style="text-align: center;"><?=$prixTotalFinition;?> €</td>
             </tr>
             <tr>
                 <td>Parepluie</td>
                 <td><?=$gamme->nomParepluie;?></td>
-                <td style="text-align: center;"><?=$gamme->prixParepluie;?> €</td>
-                <td style="text-align: center;"><?=$prixTotalParepluie;?> €</td>
             </tr>
         </table>
         <h3>Les composants</h3>
@@ -93,7 +85,6 @@
                 <th>Libellé</th>
                 <th style="text-align: center;">Quantité</th>
                 <th style="text-align: center;">Unité</th>
-                <th style="text-align: center;">P.U.</th>
             </tr>
             <?php  
                 foreach ($composants as $k => $v) {
@@ -103,45 +94,10 @@
                 <td><?=$v->typeProduit;?></td>
                 <td style="text-align: center;"><?=$v->quantite;?></td>
                 <td style="text-align: center;"><?=$v->unite;?></td>
-                <td style="text-align: center;"><?=$v->prix;?></td>
             </tr>
             <?php } ?>
         </table>
-        <table align="right">
-            <tr>
-                <td style="font-size: 16px;font-weight: bold;">Montant total</td>
-            </tr>
-            <tr >
-                <td>
-                    Prix HT
-                </td>
-                <td><?=$htprice;?> €</td>
-            </tr>
-            <tr>
-                <td>
-                    Prix TTC 
-                </td>
-                <td><?=$htprice * 1.2;?> €</td>
-            </tr>
-            <?php if(isset($remise)){?>
-            <tr>
-                <td>
-                    Pourcentage remise
-                </td>
-                <td><?=$remise->name.' %';?></td>
-            </tr>
-            <tr>
-                <td>
-                    Prix TTC remisé
-                </td>
-                <?php $str='0.'.$remise->name;
-                $remiseAmount=1-floatval($str);?>
-                <td><?=($htprice * 1.2) * $remiseAmount;?> €</td>
-            </tr>
-        <?php }?>
-
-        </table>
-        <table align="left">
+        <table align="center">
             <tr>
                 <td>
                     <h2>Exemple de plan de coupe :</h2>
@@ -149,7 +105,7 @@
             </tr>
             <tr>
                 <td>
-                    <img src="<?=url('img/plan-coupe.png');?>" style="max-width: 300px;margin:0 auto 0 0;display: block;" />
+                    <img src="<?=url('img/plan-coupe.png');?>" style="max-width: 500px;margin:0 auto;display: block;" />
                 </td>
             </tr>
         </table>

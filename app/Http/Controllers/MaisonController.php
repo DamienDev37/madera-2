@@ -69,17 +69,13 @@ class MaisonController extends Controller
     public function show($id)
     {
         $gammes = DB::table('gammes')->get();
-        $finitions = DB::table('finitions')->get();
-        $couvertures = DB::table('couvertures')->get();
-        $isolants = DB::table('isolants')->get();
-        $parepluies = DB::table('parepluies')->get();
         $sections = DB::table('produits')->where('idFamille', '=', 1)->get();
         $montants = DB::table('produits')->where('idFamille', '=', 2)->get();
         $remplissages = DB::table('produits')->where('idFamille', '=', 3)->get();
 
         $maison = $this->maisonRepository->getById($id);
         $gamme = DB::table('gammes')->where('id', '=', $maison->idGamme)->first();
-        return view('maison.show',  compact('maison','gammes','finitions','couvertures','isolants','parepluies','gamme','sections','montants','remplissages'));
+        return view('maison.show',  compact('maison','gammes','gamme','sections','montants','remplissages'));
     }
 
     /**
